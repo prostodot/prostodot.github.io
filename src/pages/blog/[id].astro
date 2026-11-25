@@ -1,0 +1,37 @@
+---
+import { getCollection, getEntries, render } from 'astro:content';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import PostDate from '../../components/PostDate.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+export const getStaticPaths = (async () =>
+  (await getCollection('blog')).map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }))) satisfies GetStaticPaths;
+
+const { post } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
+const { title, description, published } = post.data;
+const products = await getEntries(post.data.products);
+const { Content } = await render(post);
+---
+<SiteLayout title={title} description={description}>
+  <article class="shell page">
+    <a class="back-link" href="/blog/">Все публикации</a>
+    <header class="page-header post-header">
+      <PostDate date={published} />
+      <h1>{title}</h1>
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+    {products.length > 0 && (
+      <section class="related-posts" aria-labelledby="related-products">
+        <h2 id="related-products">Продукты</h2>
+        <ul class="product-links">
+          {products.map(({ id, data }) => <li><a href={`/products/${id}/`}>{data.name}</a></li>)}
+        </ul>
+      </section>
+    )}
+  </article>
+</SiteLayout>

@@ -1,0 +1,15 @@
+---
+import PostList from '../../components/PostList.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+const description = 'Новые возможности и выпуски продуктов Prosto.';
+---
+<SiteLayout title="Блог — Prosto." description={description}>
+  <section class="shell page">
+    <header class="page-header">
+      <h1>Блог</h1>
+      <p>{description}</p>
+    </header>
+    <PostList />
+  </section>
+</SiteLayout>

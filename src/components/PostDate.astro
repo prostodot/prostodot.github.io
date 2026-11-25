@@ -1,0 +1,12 @@
+---
+interface Props {
+  date: string;
+}
+
+const { date } = Astro.props;
+const formatted = new Intl.DateTimeFormat('ru', {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+}).format(new Date(date));
+---
+<time datetime={date}>{formatted}</time>

@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import PostList from '../components/PostList.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+
+const products = (await getCollection('products')).sort((a, b) =>
+  a.data.name.localeCompare(b.data.name, 'ru'),
+);
+---
+<SiteLayout title="Prosto. — приложения и инструменты" description="Продукты Prosto., ссылки на веб-версии и скачивание, блог о новых возможностях.">
+  <section class="hero">
+    <div class="shell hero-inner">
+      <h1>Приложения<br />и инструменты<span>.</span></h1>
+      <p>Знакомьтесь с продуктами Prosto. и узнавайте о новых версиях в блоге.</p>
+      <a class="button" href="#products">Смотреть продукты</a>
+    </div>
+  </section>
+
+  <section class="shell section" id="products" aria-labelledby="products-heading">
+    <h2 id="products-heading">Продукты</h2>
+    <div class="product-list">
+      {products.map(({ id, data }) => (
+        <article>
+          <a class="product-card" href={`/products/${id}/`} aria-labelledby={`product-${id}`}>
+            {data.icon && <img src={data.icon} alt="" width="72" height="72" />}
+            <div>
+              <h3 id={`product-${id}`}>{data.name}</h3>
+              <p>{data.description}</p>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+  <section class="shell section latest" aria-labelledby="blog-heading">
+    <div class="section-heading">
+      <h2 id="blog-heading">Из блога</h2>
+      <a href="/blog/">Все публикации</a>
+    </div>
+    <PostList limit={3} />
+  </section>
+</SiteLayout>
